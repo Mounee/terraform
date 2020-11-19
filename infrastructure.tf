@@ -1,9 +1,32 @@
+#
+#Bestand gemaakt door Mounir Challouk
+#
+
 provider "aws" {
 	profile = "default"
 	region  = "eu-west-1"
 }
 
+#Private bucket aanmaken
+resource "aws_s3_bucket" "b" {
+  	bucket = "mounirchallouk"
+  	acl    = "private"
 
+  	tags = {
+    	Name        = "mounirchallouk"
+    	Environment = "Dev"
+  	}
+}
+
+#image.png uploaden naar aangemaakte bucket (public)
+resource "aws_s3_bucket_object" "object" {
+  	bucket = aws_s3_bucket.b.id
+  	key    = "image.png"
+  	source = "bucket/image.png"
+	acl = "public-read"
+}
+
+#EC2 instance aanmaken
 resource "aws_security_group" "instance" {
 	name = "terraform-webserver"
 	
