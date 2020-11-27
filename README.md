@@ -7,6 +7,7 @@ In <b>variables.tf</b>:
       <ul>
         <li>Dit is de <a href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs#shared-credentials-file">Shared Credentials File</a></li>
         <li>Dit bestand staat standaard in "/Users/<i>gebruiker</i>/.aws/credentials"</li>
+		<li>Voorbeeld: "/Users/chall/.aws/credentials"</li>
       </ul>
     </li>
     <li>variable "public_key"
