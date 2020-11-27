@@ -1,5 +1,17 @@
+variable "sharedcredslocation" {
+      default = "/Users/chall/.aws/credentials"
+}
+
 variable "region" {
       default = "eu-west-1"
+}
+
+variable "availability-zone1" {
+      default = "eu-west-1a"
+}
+
+variable "availability-zone2" {
+      default = "eu-west-1b"
 }
 
 variable "bucket" {
@@ -15,9 +27,13 @@ variable "instance-type" {
 }
 
 variable "key_name" {
-      default     = "customkey"
+      default     = "ssh-key"
 }
 
 variable "public_key" {
-      default     = "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAjx4JlyLFZF087iD/TNVssRXj/6PxJsgt+khDbJqZQ3Dg1x7rpw2nU12ZtZhq1EYwYtS2I2PaxR1FJeoP3ZLn/N0/tHhobKlXEGlku3hgutGcdC+YBPMtdaaZ3Pu/y8O2mKdEWjWxB02FUlXHtD52gJxFEY0CBWwYQqTJ6r5fl37SfLWQSE0VwfMc0ctlzsK/ZZTzkRg4Jjk0uEWx8JyB09VtsU52gJ3wCov7YppluLQQPgIP3+ygbxER8xbMJ97FbmFjSTYxeui/igjYUDbYTLlwJfKk5tOQRpxYHt6oMdgMJAnFDk6cT2vaw61LEyIL+3/SqhymGDtyrAGGlCj+4Q=="
+      default     = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCbSsj7eFIGgzweCrMHgkc4ZVrCskLb6pjcw9PR1bgW70rPW8PFCOxtT+ZwLqjT6hlBJSgHBLYgkJgLR/zdVcd/LuX0HmFxNw9fm03aR5SpXVI1uPirVxP2pihUnJkak68nJPGMSr3phqKoihm/Mog4F0ohutLYcHCb3oqXE0PlLY/jhdnYGW8XAYplG8PdQidNvX7MjYgoRYtIiVa3c0k59NZPWGzqLHCypq0RIuLtptpoilipJ5YzVFJMBQJseWL2BmQB6js3nAtAhhvpXuAL/2ZAHfqucZvszghHxMIx61qxXkQCASIq+/c/5bNfO00mCMa8Y/yVG5kQabPxgawV"
+}
+
+variable "private_key" {
+      default = "keys/mounir.pem"
 }
