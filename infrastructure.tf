@@ -12,10 +12,8 @@ provider "aws" {
 resource "aws_s3_bucket" "bucket" {
   	bucket = var.bucket
   	acl    = "private"
-
-  	tags = {
-    	Name        = var.bucket
-    	Environment = "Dev"
+	tags = {
+    	Name = var.bucket
   	}
 }
 
@@ -83,11 +81,11 @@ resource "aws_route_table" "Mounir-rt-public"{
 
 # Routing table association
 resource "aws_route_table_association" "Mounir-public-1" {
-	subnet_id= aws_subnet.Mounir-PublicSubnet1.id
+	subnet_id	= aws_subnet.Mounir-PublicSubnet1.id
 	route_table_id = aws_route_table.Mounir-rt-public.id
 }
 resource "aws_route_table_association" "Mounir-public-2" {
-	subnet_id= aws_subnet.Mounir-PublicSubnet2.id
+	subnet_id	= aws_subnet.Mounir-PublicSubnet2.id
 	route_table_id = aws_route_table.Mounir-rt-public.id
 }
 
@@ -149,7 +147,7 @@ resource "aws_instance" "webservers1and2" {
 					apt install php php-mysql libapache2-mod-php php-cli -y
 					rm /var/www/html/index.html
 					mv /home/ubuntu/index.php /var/www/html/
-					sed -i "s@ENDPOINT@'${aws_apigatewayv2_api.example.api_endpoint}'@g" /var/www/html/index.php
+					sed -i "s@ENDPOINT@'${aws_apigatewayv2_api.apigw.api_endpoint}'@g" /var/www/html/index.php
 					sed -i "s@BUCKET@${var.bucket}@g" /var/www/html/index.php
 					sed -i "s@REGION@${var.region}@g" /var/www/html/index.php
 				EOF
@@ -185,7 +183,7 @@ resource "aws_instance" "webserver3" {
 					apt install php php-mysql libapache2-mod-php php-cli -y
 					rm /var/www/html/index.html
 					mv /home/ubuntu/index.php /var/www/html/
-					sed -i "s@ENDPOINT@'${aws_apigatewayv2_api.example.api_endpoint}'@g" /var/www/html/index.php
+					sed -i "s@ENDPOINT@'${aws_apigatewayv2_api.apigw.api_endpoint}'@g" /var/www/html/index.php
 					sed -i "s@BUCKET@${var.bucket}@g" /var/www/html/index.php
 					sed -i "s@REGION@${var.region}@g" /var/www/html/index.php
 				EOF
@@ -209,30 +207,27 @@ resource "aws_instance" "webserver3" {
 
 #Load Balancer
 resource "aws_lb" "loadbalancer" {
-  	name               = "test-lb-tf"
-  	internal           = false
-  	load_balancer_type = "application"
-  	security_groups    = [aws_security_group.securityGroup.id]
-  	subnets            = [aws_subnet.Mounir-PublicSubnet1.id, aws_subnet.Mounir-PublicSubnet2.id]
-
-  	enable_deletion_protection = false
-
-	ip_address_type = "ipv4"
+  	name               	= "terraform-lb"
+	load_balancer_type 	= "application"
+  	internal           	= false
+  	security_groups    	= [aws_security_group.securityGroup.id]
+  	subnets            	= [aws_subnet.Mounir-PublicSubnet1.id, aws_subnet.Mounir-PublicSubnet2.id]
+	ip_address_type 	= "ipv4"
 }
 
 #Load Balancer Listener
 resource "aws_lb_listener" "lblistener" {
-	load_balancer_arn = aws_lb.loadbalancer.arn
+	load_balancer_arn 	= aws_lb.loadbalancer.arn
 	port = 80
 	protocol = "HTTP"
 	default_action {
 		type = "forward"
-		target_group_arn = aws_lb_target_group.lbtargetgroup.arn
+		target_group_arn = aws_lb_target_group.Mounir-lbtargetgroup.arn
 	}
 }
 
 #Load Balancer Target Group
-resource "aws_lb_target_group" "lbtargetgroup" {
+resource "aws_lb_target_group" "Mounir-lbtargetgroup" {
 	health_check {
 		interval = 10
 		path = "/"
@@ -242,24 +237,24 @@ resource "aws_lb_target_group" "lbtargetgroup" {
 		unhealthy_threshold = 2
 	}
 
-  	name     = "terraform-lb-targetgroup"
-  	port     = 80
-  	protocol = "HTTP"
-  	vpc_id   = aws_vpc.Mounir-VPC.id
+  	name     	= "terraform-lb-targetgroup"
+  	port     	= 80
+  	protocol 	= "HTTP"
+  	vpc_id   	= aws_vpc.Mounir-VPC.id
 	target_type = "instance"
 }
 
 #Target Group registreren met EC2 instance 1 en 2
 resource "aws_lb_target_group_attachment" "targetgroupattachment-ec1and2" {
 	count = length(aws_instance.webservers1and2)
-  	target_group_arn = aws_lb_target_group.lbtargetgroup.arn
+  	target_group_arn = aws_lb_target_group.Mounir-lbtargetgroup.arn
   	target_id        = aws_instance.webservers1and2[count.index].id
   	port             = 80
 }
 
 #Target Group registreren met EC2 instance 3
 resource "aws_lb_target_group_attachment" "targetgroupattachment-ec3" {
-  	target_group_arn = aws_lb_target_group.lbtargetgroup.arn
+  	target_group_arn = aws_lb_target_group.Mounir-lbtargetgroup.arn
   	target_id        = aws_instance.webserver3.id
   	port             = 80
 }
@@ -275,7 +270,6 @@ data "archive_file" "pythonfile" {
 #IAM Rol aanmaken voor Lambda functie
 resource "aws_iam_role" "iam_for_lambda" {
     name = "iam_for_lambda"
-
     assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -303,19 +297,19 @@ resource "aws_lambda_function" "lambda_function" {
 }
 
 #HTTP API Gateway
-resource "aws_apigatewayv2_api" "example" {
+resource "aws_apigatewayv2_api" "apigw" {
     name          = "terraform-http-api"
     protocol_type = "HTTP"
     target = aws_lambda_function.lambda_function.arn
 }
 
 #Permission om functie te revoken
-resource "aws_lambda_permission" "apigw" {
+resource "aws_lambda_permission" "apigwperm" {
 	action        = "lambda:InvokeFunction"
 	function_name = aws_lambda_function.lambda_function.arn
 	principal     = "apigateway.amazonaws.com"
 
-	source_arn = "${aws_apigatewayv2_api.example.execution_arn}/*/*"
+	source_arn = "${aws_apigatewayv2_api.apigw.execution_arn}/*/*"
 }
 
 #output in CMD na apply
@@ -336,5 +330,5 @@ output "loadbalancer_dns_name" {
 }
 
 output "api_gateway_endpoint" {
-    value = aws_apigatewayv2_api.example.api_endpoint
+    value = aws_apigatewayv2_api.apigw.api_endpoint
 }
