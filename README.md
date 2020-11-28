@@ -1,4 +1,4 @@
-# terraform
+# terraform gemaakt door Mounir Challouk
 Om deze Terraform infrastructure te gebruiken, moet u het onderstaande aanpassen:
 
 In <b>variables.tf</b>:
