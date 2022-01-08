@@ -1,4 +1,4 @@
-# terraform by Mounir Challouk
+# terraform by Mounir C
 This IaS (Infrastructure as Code) will create the following:
 <ul>
     <li>Will host a PHP application on 3 EC2 instances behind a load balancer
