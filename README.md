@@ -26,7 +26,7 @@ In <b>variables.tf</b>:
     <li>variable "public_key"
       <ul>
         <li>This is the <a href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/key_pair">Public Key</a></li>
-        <li>Has to be in <a href="https://sectigo.com/resource-library/what-is-an-ssh-key">SSH-RSA</a> format</li>
+        <li>Has to be in SSH-RSA format</li>
       </ul>
     </li>
     <li>variable "private_key"
