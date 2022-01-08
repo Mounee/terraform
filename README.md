@@ -1,5 +1,18 @@
 # terraform by Mounir Challouk
-To use thsi Terraform infrastructure, you will have to apply the following steps:
+This IaS (Infrastructure as Code) will create the following:
+<ul>
+    <li>Will host a PHP application on 3 EC2 instances behind a load balancer
+      <ul>
+        <li>2 in subnet1 (10.0.1.0/24)</li>
+	<li>1 in subnet2 (10.0.2.0/24)</li>
+      </ul>
+    </li>
+    <li>The PHP application will invoke a lambda function, which replies with the EC2 instance IP address and will show an image stored on an S3 bucket.
+    </li>  
+  </ul>
+
+
+To use this Terraform infrastructure, you will have to apply the following steps:
 
 In <b>variables.tf</b>:
   <ul>
